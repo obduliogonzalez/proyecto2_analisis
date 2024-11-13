@@ -16,6 +16,7 @@ sns.histplot(df['price'], kde=True)
 plt.title('Distribución de Precios')
 plt.xlabel('Precio')
 plt.ylabel('Frecuencia')
+plt.grid(True)
 plt.show()
 
 plt.figure(figsize=(10, 6))
@@ -23,6 +24,7 @@ sns.scatterplot(data=df, x='price', y='units_sold', hue='rating', palette='coolw
 plt.title('Relación entre Precio y Unidades Vendidas')
 plt.xlabel('Precio')
 plt.ylabel('Unidades Vendidas')
+plt.grid(True)
 plt.show()
 
 
@@ -50,6 +52,7 @@ plt.xticks(rotation=45)
 plt.title('Top 10 Categorías por Unidades Vendidas')
 plt.xlabel('Categorías')
 plt.ylabel('Unidades Vendidas Promedio')
+plt.grid(True)
 plt.show()
 
 
