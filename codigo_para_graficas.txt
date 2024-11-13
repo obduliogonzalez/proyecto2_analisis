@@ -1,0 +1,68 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import duckdb
+
+print("¡Python está funcionando en VS Code!")
+
+# Cargar el dataset (ajusta la ruta según tu archivo)
+df = pd.read_csv('C:\\Users\\nestor.gonzalez\\Documents\\GitHub\\proyecto2_analisis\\summer-products-with-rating-and-performance_2020-08.csv')
+
+
+# Visualizar la distribución de la columna 'price'
+plt.figure(figsize=(10, 6))
+sns.histplot(df['price'], kde=True)
+plt.title('Distribución de Precios')
+plt.xlabel('Precio')
+plt.ylabel('Frecuencia')
+plt.show()
+
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=df, x='price', y='units_sold', hue='rating', palette='coolwarm')
+plt.title('Relación entre Precio y Unidades Vendidas')
+plt.xlabel('Precio')
+plt.ylabel('Unidades Vendidas')
+plt.show()
+
+
+# Seleccionamos las columnas relevantes
+correlation_df = df[['price', 'rating', 'units_sold']]
+
+# Generar el heatmap de correlación
+plt.figure(figsize=(8, 6))
+sns.heatmap(correlation_df.corr(), annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Heatmap de Correlación entre Precio, Calificación y Ventas')
+plt.show()
+
+# Agrupar por 'tags' y calcular el promedio de 'units_sold' y 'rating'
+category_analysis = df.groupby('tags').agg({'units_sold': 'mean', 'rating': 'mean'}).sort_values(by='units_sold', ascending=False)
+
+# Mostrar las 10 categorías más populares
+top_10_categories = category_analysis.head(10)
+print("Top 10 Categorías por Ventas Promedio")
+print(top_10_categories)
+
+# Visualizar las 10 categorías más populares
+plt.figure(figsize=(12, 6))
+sns.barplot(x=top_10_categories.index, y=top_10_categories['units_sold'])
+plt.xticks(rotation=45)
+plt.title('Top 10 Categorías por Unidades Vendidas')
+plt.xlabel('Categorías')
+plt.ylabel('Unidades Vendidas Promedio')
+plt.show()
+
+
+# Crear una nueva columna para calcular el descuento
+df['discount'] = (df['retail_price'] - df['price']) / df['retail_price'] * 100
+
+# Filtrar los productos con descuentos significativos (más del 20%)
+discounted_products = df[df['discount'] > 20]
+
+# Gráfico de dispersión para ver la relación entre el descuento y las unidades vendidas
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=discounted_products, x='discount', y='units_sold', hue='rating', palette='coolwarm')
+plt.title('Relación entre Descuento y Unidades Vendidas')
+plt.xlabel('Descuento (%)')
+plt.ylabel('Unidades Vendidas')
+plt.show()
